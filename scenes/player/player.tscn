@@ -58,13 +58,14 @@ shape = SubResource("RectangleShape2D_dovo2")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 11.0
-offset_top = -11.0
-offset_right = 12.0
-offset_bottom = 12.0
+offset_left = 6.0
+offset_top = -82.0
+offset_right = 7.0
+offset_bottom = -69.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 1
+theme_override_font_sizes/font_size = 9
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)

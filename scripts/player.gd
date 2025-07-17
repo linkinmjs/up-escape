@@ -39,8 +39,8 @@ func _physics_process(delta: float) -> void:
 	
 	handle_input(delta)
 	apply_gravity(delta)
-	move_character()  # ← primero moverse
-	handle_state(delta)  # ← luego actualizar el estado
+	move_character()
+	handle_state(delta)
 	update_debug_info()
 
 func handle_input(delta: float) -> void:
