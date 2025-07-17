@@ -14,6 +14,7 @@ var debug_visible := true
 # Movimiento
 const GRAVITY := 800.0
 const MAX_FALL_SPEED := 600.0
+const MOVE_SPEED := 100.0
 
 # Salto cargado
 var jump_power := 0.0
@@ -34,7 +35,7 @@ var right := false
 var jump := false
 
 func _physics_process(delta: float) -> void:
-	print(state)
+	print("vel:", velocity, " grounded:", is_on_floor())
 	handle_input(delta)
 	handle_state(delta)
 	apply_gravity(delta)
@@ -54,8 +55,14 @@ func handle_input(delta: float) -> void:
 
 	if state == PlayerState.IDLE and jump and is_grounded:
 		state = PlayerState.CHARGING
+	
+	if is_grounded and state == PlayerState.IDLE:
+		velocity.x = direction * MOVE_SPEED
+	elif is_grounded and direction == 0:
+		velocity.x = 0
 
 	if state == PlayerState.CHARGING:
+		velocity.x = 0
 		if jump:
 			jump_power += JUMP_POWER_STEP * delta
 			if jump_power >= MAX_JUMP_POWER:
@@ -75,12 +82,13 @@ func start_jump():
 	velocity.x = direction * 80.0
 
 func apply_gravity(delta: float) -> void:
-	if state in [PlayerState.FALLING, PlayerState.JUMPING]:
+	if state in [PlayerState.FALLING, PlayerState.JUMPING, PlayerState.IDLE]:
 		velocity.y += GRAVITY * delta
 		if velocity.y > MAX_FALL_SPEED:
 			velocity.y = MAX_FALL_SPEED
 
 func move_character() -> void:
+	print("Move Character")
 	move_and_slide()
 	is_grounded = is_on_floor()
 
@@ -102,6 +110,7 @@ func handle_state(delta: float) -> void:
 func _on_splat_timer_timeout() -> void:
 	state = PlayerState.IDLE
 
+# WIP
 func update_debug_info() -> void:
 	var lines := []
 	lines.append("STATE: %s" % PlayerState.keys()[state])
