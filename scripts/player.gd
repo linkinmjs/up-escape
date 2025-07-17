@@ -45,6 +45,9 @@ func handle_input(delta: float) -> void:
 	left = Input.is_action_pressed("ui_left")
 	right = Input.is_action_pressed("ui_right")
 	jump = Input.is_action_pressed("ui_jump")
+	if Input.is_action_just_pressed("ui_toggle_debug"):
+		debug_visible = !debug_visible
+		$DebugLabel.visible = debug_visible
 
 	if left:
 		direction = -1
@@ -70,9 +73,7 @@ func handle_input(delta: float) -> void:
 		else:
 			start_jump()
 			
-	if Input.is_action_just_pressed("ui_toggle_debug"):
-		debug_visible = !debug_visible
-		$DebugLabel.visible = debug_visible
+
 
 func start_jump():
 	var power = clamp(jump_power, MIN_JUMP_POWER, MAX_JUMP_POWER)
@@ -119,5 +120,14 @@ func update_debug_info() -> void:
 	lines.append("GROUND: %s" % is_grounded)
 	lines.append("DIR: %d" % direction)
 	lines.append("JUMP_PWR: %.2f" % jump_power)
+	lines.append("INPUT DIR: %d" % direction)
 
 	$DebugLabel.text = "\n".join(lines)
+
+
+func _on_wall_check_body_entered(body: Node2D) -> void:
+	if not is_grounded and (state == PlayerState.JUMPING or state == PlayerState.FALLING):
+		if abs(velocity.x) > 20.0:
+			velocity.x = -velocity.x * 0.5  # Rebote invertido y más débil
+			#$AnimatedSprite2D.play("air_collide")  # WIP
+			state = PlayerState.FALLING
