@@ -14,7 +14,7 @@ var debug_visible := true
 # Movimiento
 const GRAVITY := 800.0
 const MAX_FALL_SPEED := 600.0
-const MOVE_SPEED := 100.0
+const MOVE_SPEED := 80.0
 
 # Salto cargado
 var jump_power := 0.0
@@ -36,7 +36,7 @@ var jump := false
 
 func _physics_process(delta: float) -> void:
 	#print("vel:", velocity, " grounded:", is_on_floor())
-	check_wall_bounce()  # ← detectar rebote del frame anterior
+	
 	handle_input(delta)
 	apply_gravity(delta)
 	move_character()  # ← primero moverse
@@ -83,7 +83,7 @@ func start_jump():
 	jump_power = 0.0
 	state = PlayerState.JUMPING
 	velocity.y = -MAX_JUMP_HEIGHT * power
-	velocity.x = direction * 80.0
+	velocity.x = direction * 150.0
 
 func check_wall_bounce():
 	var count := get_slide_collision_count()
@@ -95,7 +95,7 @@ func check_wall_bounce():
 				velocity.x = 80.0 * -sign(normal.x)
 			else:
 				velocity.x = -velocity.x * 0.5
-			print("REBOTANDO → vel.x = ", velocity.x)
+			print("REBOTANDO desde check_wall_bounce → vel.x = ", velocity.x)
 			state = PlayerState.FALLING
 			break
 
@@ -106,6 +106,24 @@ func apply_gravity(delta: float) -> void:
 			velocity.y = MAX_FALL_SPEED
 
 func move_character() -> void:
+	var pre_velocity = velocity  # ← almacenar antes de moverse
+	move_and_slide()
+	is_grounded = is_on_floor()
+
+	# Detectar rebotes lateralmente
+	for i in get_slide_collision_count():
+		var collision := get_slide_collision(i)
+		var normal := collision.get_normal()
+
+		if not is_grounded and abs(normal.x) > 0.9:
+			if abs(pre_velocity.x) < 1:
+				velocity.x = 80.0 * -sign(normal.x)
+			else:
+				velocity.x = -pre_velocity.x * 0.5  # ← usar la original, no la ya modificada
+			#print("REBOTANDO → vel.x = ", velocity.x)
+			state = PlayerState.FALLING
+			break
+			
 	move_and_slide()
 	is_grounded = is_on_floor()
 
@@ -118,9 +136,21 @@ func move_character() -> void:
 				velocity.x = 80.0 * sign(normal.x) * -1
 			else:
 				velocity.x = -velocity.x * 0.5
-			print("REBOTANDO → vel.x = ", velocity.x)
+			print("REBOTANDO desde move_character → vel.x = ", velocity.x)
 			state = PlayerState.FALLING
 			break
+	for i in count:
+		var collision := get_slide_collision(i)
+		var normal := collision.get_normal()
+		if not is_grounded and abs(normal.x) > 0.9:
+			if abs(velocity.x) < 1:
+				velocity.x = 80.0 * sign(normal.x) * -1
+			else:
+				velocity.x = -velocity.x * 0.5
+			print("REBOTANDO desde move_character → vel.x = ", velocity.x)
+			state = PlayerState.FALLING
+			break
+	#check_wall_bounce()  # ← detectar rebote del frame anterior
 
 
 func handle_state(delta: float) -> void:
