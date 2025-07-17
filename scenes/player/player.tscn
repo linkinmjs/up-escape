@@ -68,4 +68,5 @@ size_flags_vertical = 1
 theme_override_font_sizes/font_size = 9
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
