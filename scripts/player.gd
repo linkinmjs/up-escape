@@ -35,11 +35,13 @@ var right := false
 var jump := false
 
 func _physics_process(delta: float) -> void:
-	print("vel:", velocity, " grounded:", is_on_floor())
+	#print("vel:", velocity, " grounded:", is_on_floor())
+	check_wall_bounce()  # ← detectar rebote del frame anterior
 	handle_input(delta)
-	handle_state(delta)
 	apply_gravity(delta)
-	move_character()
+	move_character()  # ← primero moverse
+	handle_state(delta)  # ← luego actualizar el estado
+	update_debug_info()
 
 func handle_input(delta: float) -> void:
 	left = Input.is_action_pressed("ui_left")
@@ -61,7 +63,7 @@ func handle_input(delta: float) -> void:
 	
 	if is_grounded and state == PlayerState.IDLE:
 		velocity.x = direction * MOVE_SPEED
-	elif is_grounded and direction == 0:
+	elif is_grounded and direction == 0 and state == PlayerState.IDLE:
 		velocity.x = 0
 
 	if state == PlayerState.CHARGING:
@@ -76,11 +78,26 @@ func handle_input(delta: float) -> void:
 
 
 func start_jump():
+	print("Jump vel.x:", velocity.x)
 	var power = clamp(jump_power, MIN_JUMP_POWER, MAX_JUMP_POWER)
 	jump_power = 0.0
 	state = PlayerState.JUMPING
 	velocity.y = -MAX_JUMP_HEIGHT * power
 	velocity.x = direction * 80.0
+
+func check_wall_bounce():
+	var count := get_slide_collision_count()
+	for i in count:
+		var collision := get_slide_collision(i)
+		var normal := collision.get_normal()
+		if not is_grounded and abs(normal.x) > 0.9:
+			if abs(velocity.x) < 1:
+				velocity.x = 80.0 * -sign(normal.x)
+			else:
+				velocity.x = -velocity.x * 0.5
+			print("REBOTANDO → vel.x = ", velocity.x)
+			state = PlayerState.FALLING
+			break
 
 func apply_gravity(delta: float) -> void:
 	if state in [PlayerState.FALLING, PlayerState.JUMPING, PlayerState.IDLE]:
@@ -89,9 +106,22 @@ func apply_gravity(delta: float) -> void:
 			velocity.y = MAX_FALL_SPEED
 
 func move_character() -> void:
-	print("Move Character")
 	move_and_slide()
 	is_grounded = is_on_floor()
+
+	var count := get_slide_collision_count()
+	for i in count:
+		var collision := get_slide_collision(i)
+		var normal := collision.get_normal()
+		if not is_grounded and abs(normal.x) > 0.9:
+			if abs(velocity.x) < 1:
+				velocity.x = 80.0 * sign(normal.x) * -1
+			else:
+				velocity.x = -velocity.x * 0.5
+			print("REBOTANDO → vel.x = ", velocity.x)
+			state = PlayerState.FALLING
+			break
+
 
 func handle_state(delta: float) -> void:
 	if state == PlayerState.JUMPING and velocity.y > 0:
@@ -111,6 +141,7 @@ func handle_state(delta: float) -> void:
 func _on_splat_timer_timeout() -> void:
 	state = PlayerState.IDLE
 
+
 # WIP
 func update_debug_info() -> void:
 	var lines := []
@@ -123,11 +154,3 @@ func update_debug_info() -> void:
 	lines.append("INPUT DIR: %d" % direction)
 
 	$DebugLabel.text = "\n".join(lines)
-
-
-func _on_wall_check_body_entered(body: Node2D) -> void:
-	if not is_grounded and (state == PlayerState.JUMPING or state == PlayerState.FALLING):
-		if abs(velocity.x) > 20.0:
-			velocity.x = -velocity.x * 0.5  # Rebote invertido y más débil
-			#$AnimatedSprite2D.play("air_collide")  # WIP
-			state = PlayerState.FALLING
