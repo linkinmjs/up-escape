@@ -1,22 +1,14 @@
 [gd_scene load_steps=6 format=3 uid="uid://b0sdjti8j0tam"]
 
 [ext_resource type="Script" uid="uid://cbn1tlop6fmgm" path="res://scripts/player.gd" id="1_8afob"]
-[ext_resource type="Texture2D" uid="uid://cojjb4wdbc7i1" path="res://icon.svg" id="2_dovo2"]
+[ext_resource type="Texture2D" uid="uid://bw0qnkwa868b4" path="res://assets/sprites/player/King_default_sheet.png" id="2_dovo2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gmlin"]
 atlas = ExtResource("2_dovo2")
-region = Rect2(0, 0, 128, 128)
+region = Rect2(0, 0, 32, 32)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_lvxji"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_8afob"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_gmlin")
-}],
-"loop": true,
-"name": &"charge",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_gmlin")
@@ -24,28 +16,44 @@ animations = [{
 "loop": true,
 "name": &"idle",
 "speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_gmlin")
-}],
-"loop": true,
-"name": &"jump",
-"speed": 5.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dovo2"]
-size = Vector2(124, 125)
+size = Vector2(20, 26)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_8afob")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_lvxji")
-animation = &"jump"
+sprite_frames = SubResource("SpriteFrames_8afob")
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -0.5)
+position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_dovo2")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="SplatTimer" type="Timer" parent="."]
+
+[node name="GroundCheck" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundCheck"]
+
+[node name="HeadCheck" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HeadCheck"]
+
+[node name="WallCheck" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallCheck"]
+
+[node name="DebugLabel" type="Label" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 11.0
+offset_top = -11.0
+offset_right = 12.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 1

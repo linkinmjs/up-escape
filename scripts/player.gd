@@ -1,38 +1,114 @@
 extends CharacterBody2D
 
-@export var gravity: float = 800.0
-@export var jump_force: float = -400.0
-@export var max_jump_hold_time: float = 0.25 # para salto cargado
+enum PlayerState {
+	IDLE,
+	CHARGING,
+	JUMPING,
+	FALLING,
+	SPLAT
+}
 
-@export var walk_speed: float = 0.0 # JumpKing no tiene control horizontal
+var state : PlayerState = PlayerState.IDLE
+var debug_visible := true
 
-var jump_timer := 0.0
-var is_charging_jump := false
+# Movimiento
+const GRAVITY := 800.0
+const MAX_FALL_SPEED := 600.0
 
-func _ready() -> void:
-	velocity = Vector2.ZERO
+# Salto cargado
+var jump_power := 0.0
+const JUMP_POWER_STEP := 3.0
+const MAX_JUMP_POWER := 2.0
+const MIN_JUMP_POWER := 0.3
+const MAX_JUMP_HEIGHT := 250.0
+
+# Dirección
+var direction := 0  # -1 (izq), 0 (neutral), 1 (der)
+
+# Estados
+var is_grounded := false
+
+# Inputs
+var left := false
+var right := false
+var jump := false
 
 func _physics_process(delta: float) -> void:
-	# Gravedad
-	if not is_on_floor():
-		velocity.y += gravity * delta
-	else:
-		# Carga de salto
-		if Input.is_action_pressed("ui_jump"):
-			is_charging_jump = true
-			jump_timer += delta
-			jump_timer = min(jump_timer, max_jump_hold_time)
-		elif is_charging_jump and Input.is_action_just_released("ui_jump"):
-			# Ejecutar el salto cargado
-			var power = jump_force * (jump_timer / max_jump_hold_time)
-			velocity.y = power
-			is_charging_jump = false
-			jump_timer = 0.0
-		else:
-			# En suelo y sin saltar
-			velocity.y = 0.0
-			is_charging_jump = false
-			jump_timer = 0.0
+	print(state)
+	handle_input(delta)
+	handle_state(delta)
+	apply_gravity(delta)
+	move_character()
 
-	# Mover personaje
+func handle_input(delta: float) -> void:
+	left = Input.is_action_pressed("ui_left")
+	right = Input.is_action_pressed("ui_right")
+	jump = Input.is_action_pressed("ui_jump")
+
+	if left:
+		direction = -1
+	elif right:
+		direction = 1
+	else:
+		direction = 0
+
+	if state == PlayerState.IDLE and jump and is_grounded:
+		state = PlayerState.CHARGING
+
+	if state == PlayerState.CHARGING:
+		if jump:
+			jump_power += JUMP_POWER_STEP * delta
+			if jump_power >= MAX_JUMP_POWER:
+				start_jump()
+		else:
+			start_jump()
+			
+	if Input.is_action_just_pressed("ui_toggle_debug"):
+		debug_visible = !debug_visible
+		$DebugLabel.visible = debug_visible
+
+func start_jump():
+	var power = clamp(jump_power, MIN_JUMP_POWER, MAX_JUMP_POWER)
+	jump_power = 0.0
+	state = PlayerState.JUMPING
+	velocity.y = -MAX_JUMP_HEIGHT * power
+	velocity.x = direction * 80.0
+
+func apply_gravity(delta: float) -> void:
+	if state in [PlayerState.FALLING, PlayerState.JUMPING]:
+		velocity.y += GRAVITY * delta
+		if velocity.y > MAX_FALL_SPEED:
+			velocity.y = MAX_FALL_SPEED
+
+func move_character() -> void:
 	move_and_slide()
+	is_grounded = is_on_floor()
+
+func handle_state(delta: float) -> void:
+	if state == PlayerState.JUMPING and velocity.y > 0:
+		state = PlayerState.FALLING
+
+	if state == PlayerState.FALLING and is_grounded:
+		if abs(velocity.y) > 550:
+			state = PlayerState.SPLAT
+			$AnimationPlayer.play("splat")
+			$splat_timer.start()
+		else:
+			state = PlayerState.IDLE
+
+	if state == PlayerState.SPLAT and $splat_timer.is_stopped():
+		state = PlayerState.IDLE
+
+func _on_splat_timer_timeout() -> void:
+	state = PlayerState.IDLE
+
+func update_debug_info() -> void:
+	var lines := []
+	lines.append("STATE: %s" % PlayerState.keys()[state])
+	lines.append("VEL: (%.1f, %.1f)" % [velocity.x, velocity.y])
+	lines.append("POS: (%.0f, %.0f)" % [position.x, position.y])
+	lines.append("GROUND: %s" % is_grounded)
+	lines.append("DIR: %d" % direction)
+	lines.append("JUMP_PWR: %.2f" % jump_power)
+
+	$DebugLabel.text = "\n".join(lines)

@@ -214,4 +214,4 @@ tile_set = SubResource("TileSet_b2cq8")
 rendering_quadrant_size = 32
 
 [node name="Player" parent="." instance=ExtResource("2_bovvr")]
-position = Vector2(264, 124)
+position = Vector2(275, 138)
