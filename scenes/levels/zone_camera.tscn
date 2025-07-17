@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://fupdwtkenmfl"]
+
+[ext_resource type="Script" uid="uid://0nt1obopc3qg" path="res://scripts/zone_camera.gd" id="1_hxa8d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hxa8d"]
+size = Vector2(20.1709, 20.0747)
+
+[node name="Zone01" type="Area2D"]
+script = ExtResource("1_hxa8d")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(31.7288, 17.933)
+shape = SubResource("RectangleShape2D_hxa8d")
+debug_color = Color(0.179371, 0.492373, 0.333824, 0.188235)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
