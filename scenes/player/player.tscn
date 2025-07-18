@@ -46,14 +46,6 @@ shape = SubResource("RectangleShape2D_dovo2")
 
 [node name="SplatTimer" type="Timer" parent="."]
 
-[node name="GroundCheck" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundCheck"]
-
-[node name="HeadCheck" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HeadCheck"]
-
 [node name="DebugLabel" type="Label" parent="."]
 anchors_preset = 15
 anchor_right = 1.0

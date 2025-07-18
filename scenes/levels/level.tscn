@@ -209,7 +209,7 @@ sources/0 = SubResource("TileSetAtlasSource_bovvr")
 
 [node name="Level" type="Node2D"]
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="DefaultCamera" type="Camera2D" parent="."]
 position = Vector2(320, 180)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
@@ -224,7 +224,13 @@ position = Vector2(567, 55)
 
 [node name="Zone01" parent="Zones" node_paths=PackedStringArray("default_camera") instance=ExtResource("3_b2cq8")]
 position = Vector2(320, 180)
-default_camera = NodePath("../../Camera2D")
+default_camera = NodePath("../../DefaultCamera")
 
 [node name="Zone02" parent="Zones" instance=ExtResource("3_b2cq8")]
-position = Vector2(320, -179)
+position = Vector2(320, -180)
+
+[node name="Zone03" parent="Zones" instance=ExtResource("3_b2cq8")]
+position = Vector2(320, -540)
+
+[node name="Zone04" parent="Zones" instance=ExtResource("3_b2cq8")]
+position = Vector2(320, -900)

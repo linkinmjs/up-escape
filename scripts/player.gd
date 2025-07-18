@@ -74,8 +74,6 @@ func handle_input(delta: float) -> void:
 				start_jump()
 		else:
 			start_jump()
-			
-
 
 func start_jump():
 	print("Jump vel.x:", velocity.x)
@@ -84,20 +82,6 @@ func start_jump():
 	state = PlayerState.JUMPING
 	velocity.y = -MAX_JUMP_HEIGHT * power
 	velocity.x = direction * 150.0
-
-func check_wall_bounce():
-	var count := get_slide_collision_count()
-	for i in count:
-		var collision := get_slide_collision(i)
-		var normal := collision.get_normal()
-		if not is_grounded and abs(normal.x) > 0.9:
-			if abs(velocity.x) < 1:
-				velocity.x = 80.0 * -sign(normal.x)
-			else:
-				velocity.x = -velocity.x * 0.5
-			#print("REBOTANDO → vel.x = ", velocity.x)
-			state = PlayerState.FALLING
-			break
 
 func apply_gravity(delta: float) -> void:
 	if state in [PlayerState.FALLING, PlayerState.JUMPING, PlayerState.IDLE]:
@@ -120,38 +104,9 @@ func move_character() -> void:
 				velocity.x = 80.0 * -sign(normal.x)
 			else:
 				velocity.x = -pre_velocity.x * 0.5  # ← usar la original, no la ya modificada
-			#print("REBOTANDO → vel.x = ", velocity.x)
+			#print("REBOTANDO 1 → vel.x = ", velocity.x)
 			state = PlayerState.FALLING
 			break
-			
-	move_and_slide()
-	is_grounded = is_on_floor()
-
-	var count := get_slide_collision_count()
-	for i in count:
-		var collision := get_slide_collision(i)
-		var normal := collision.get_normal()
-		if not is_grounded and abs(normal.x) > 0.9:
-			if abs(velocity.x) < 1:
-				velocity.x = 80.0 * sign(normal.x) * -1
-			else:
-				velocity.x = -velocity.x * 0.5
-			print("REBOTANDO desde move_character → vel.x = ", velocity.x)
-			state = PlayerState.FALLING
-			break
-	for i in count:
-		var collision := get_slide_collision(i)
-		var normal := collision.get_normal()
-		if not is_grounded and abs(normal.x) > 0.9:
-			if abs(velocity.x) < 1:
-				velocity.x = 80.0 * sign(normal.x) * -1
-			else:
-				velocity.x = -velocity.x * 0.5
-			print("REBOTANDO desde move_character → vel.x = ", velocity.x)
-			state = PlayerState.FALLING
-			break
-	#check_wall_bounce()  # ← detectar rebote del frame anterior
-
 
 func handle_state(delta: float) -> void:
 	if state == PlayerState.JUMPING and velocity.y > 0:

@@ -10,6 +10,7 @@ script = ExtResource("1_hxa8d")
 zone_camera = NodePath("Camera2D")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+enabled = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(31.7288, 17.933)
