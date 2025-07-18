@@ -7,13 +7,15 @@ extends Area2D
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("players"):
 		if default_camera:
-			default_camera.current = false
+			default_camera.enabled = false
 		if zone_camera:
+			zone_camera.enabled = true
 			zone_camera.make_current()
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("players"):
 		if zone_camera:
-			zone_camera.current = false
+			zone_camera.enabled = false
 		if default_camera:
+			zone_camera.enabled = true
 			default_camera.make_current()

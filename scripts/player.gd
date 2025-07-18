@@ -95,7 +95,7 @@ func check_wall_bounce():
 				velocity.x = 80.0 * -sign(normal.x)
 			else:
 				velocity.x = -velocity.x * 0.5
-			print("REBOTANDO desde check_wall_bounce → vel.x = ", velocity.x)
+			#print("REBOTANDO → vel.x = ", velocity.x)
 			state = PlayerState.FALLING
 			break
 

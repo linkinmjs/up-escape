@@ -5,11 +5,11 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hxa8d"]
 size = Vector2(20.1709, 20.0747)
 
-[node name="Zone01" type="Area2D"]
+[node name="Zone" type="Area2D" node_paths=PackedStringArray("zone_camera")]
 script = ExtResource("1_hxa8d")
+zone_camera = NodePath("Camera2D")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-enabled = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(31.7288, 17.933)

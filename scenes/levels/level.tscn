@@ -222,8 +222,9 @@ position = Vector2(567, 55)
 
 [node name="Zones" type="Node2D" parent="."]
 
-[node name="Zone01" parent="Zones" instance=ExtResource("3_b2cq8")]
+[node name="Zone01" parent="Zones" node_paths=PackedStringArray("default_camera") instance=ExtResource("3_b2cq8")]
 position = Vector2(320, 180)
+default_camera = NodePath("../../Camera2D")
 
 [node name="Zone02" parent="Zones" instance=ExtResource("3_b2cq8")]
 position = Vector2(320, -179)
