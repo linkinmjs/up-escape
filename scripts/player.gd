@@ -35,7 +35,8 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	handle_input(delta)
-	handle_state(delta)
+	handle_state()
+	#handle_animation() #TODO
 	apply_physics(delta)
 	update_debug_info()
 	
@@ -71,7 +72,7 @@ func handle_input(delta: float) -> void:
 	velocity.x = clamp(velocity.x, -MAX_SPEED_X, MAX_SPEED_X)
 	velocity.y = clamp(velocity.y, -MAX_SPEED_Y, MAX_SPEED_Y)
 
-func handle_state(delta: float) -> void:
+func handle_state() -> void:
 	# Determinar estados
 	match state:
 		PlayerState.IDLE_GROUND:
@@ -118,9 +119,9 @@ func handle_state(delta: float) -> void:
 		PlayerState.DEATH:
 			# sin salidas
 			pass
-	
+
+# WIP
 func apply_physics(delta: float) -> void:
-	
 	move_and_slide()
 
 func update_debug_info() -> void:
