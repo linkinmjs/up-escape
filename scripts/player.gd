@@ -2,7 +2,11 @@ extends CharacterBody2D
 
 enum PlayerState {
 	IDLE,
-	FLYING
+	IDLE_GROUND,
+	FLYING,
+	TAKEOFF,
+	HURT,
+	DEATH,
 }
 
 # Estado actual
@@ -32,7 +36,7 @@ func _physics_process(delta: float) -> void:
 	
 	handle_input(delta)
 	handle_state(delta)
-	move_and_slide()
+	apply_physics(delta)
 	update_debug_info()
 	
 func handle_input(delta: float) -> void:
@@ -66,22 +70,58 @@ func handle_input(delta: float) -> void:
 	# Clamp de velocidades
 	velocity.x = clamp(velocity.x, -MAX_SPEED_X, MAX_SPEED_X)
 	velocity.y = clamp(velocity.y, -MAX_SPEED_Y, MAX_SPEED_Y)
-	
-	
+
 func handle_state(delta: float) -> void:
-	# Determinar estado según si nos movemos lo suficiente
-	if velocity.length() > 10.0:
-		if state != PlayerState.FLYING:
-			state = PlayerState.FLYING
-			# TODO: acá reproducir animación o sonido de vuelo
-			if has_node("AnimatedSprite2D"):
-				$AnimatedSprite2D.play("flying")
-	else:
-		if state != PlayerState.IDLE:
-			state = PlayerState.IDLE
-			# aquí animación o sonido de reposo
-			if has_node("AnimatedSprite2D"):
+	# Determinar estados
+	match state:
+		PlayerState.IDLE_GROUND:
+			if input_jump:
+				state = PlayerState.TAKEOFF
+				$AnimatedSprite2D.play("takeoff")
+			#elif received_damage:
+				#state = PlayerState.HURT
+
+		PlayerState.TAKEOFF:
+		# tras un pequeño delay o al alcanzar cierta velocidad:
+			if velocity.y < 0:
+				state = PlayerState.IDLE
 				$AnimatedSprite2D.play("idle")
+		
+		PlayerState.IDLE:
+			if input_left or input_right or input_jump:
+				state = PlayerState.FLYING
+				$AnimatedSprite2D.play("flying")
+			elif is_on_floor():
+				state = PlayerState.IDLE_GROUND
+				$AnimatedSprite2D.play("idle_ground")
+			#elif received_damage:
+				#state = PlayerState.HURT
+		
+		PlayerState.FLYING:
+			if not(input_left or input_right or input_jump):
+				state = PlayerState.IDLE
+				$AnimatedSprite2D.play("idle")
+			elif is_on_floor():
+				state = PlayerState.IDLE_GROUND
+				$AnimatedSprite2D.play("idle_ground")
+			#elif received_damage:
+				#state = PlayerState.HURT
+				
+		PlayerState.HURT:
+			#if health <= 0:
+				#state = PlayerState.DEATH
+			#elif hurt_timer.time_left == 0:
+				# vuelve al último estado válido, p.ej. air o suelo
+				# state = is_on_floor() ? PlayerState.IDLE_GROUND : PlayerState.IDLE
+			pass
+		
+		PlayerState.DEATH:
+			# sin salidas
+			pass
+	
+func apply_physics(delta: float) -> void:
+	
+	move_and_slide()
 
 func update_debug_info() -> void:
 	if not debug_visible:
