@@ -34,8 +34,13 @@ var left := false
 var right := false
 var jump := false
 
+func _enter_tree() -> void:
+	set_multiplayer_authority(name.to_int())
+
 func _physics_process(delta: float) -> void:
 	#print("vel:", velocity, " grounded:", is_on_floor())
+	
+	if !is_multiplayer_authority(): return
 	
 	handle_input(delta)
 	apply_gravity(delta)

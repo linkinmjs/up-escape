@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=4 uid="uid://du32gkmfjk1dy"]
+[gd_scene load_steps=5 format=4 uid="uid://du32gkmfjk1dy"]
 
 [ext_resource type="Texture2D" uid="uid://cim37wrg2nbh4" path="res://assets/tilesets/tiles/Tileset1.png" id="1_377w7"]
-[ext_resource type="PackedScene" uid="uid://b0sdjti8j0tam" path="res://scenes/player/player.tscn" id="2_bovvr"]
 [ext_resource type="PackedScene" uid="uid://fupdwtkenmfl" path="res://scenes/levels/zone_camera.tscn" id="3_b2cq8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bovvr"]
@@ -217,9 +216,6 @@ tile_map_data = PackedByteArray("AAAMAAcAAAAAAAEAAAAMAAgAAAAAAAEAAAAMAAkAAAAAAAE
 tile_set = SubResource("TileSet_b2cq8")
 rendering_quadrant_size = 32
 
-[node name="Player" parent="." instance=ExtResource("2_bovvr")]
-position = Vector2(534, 6)
-
 [node name="Zones" type="Node2D" parent="."]
 
 [node name="Zone01" parent="Zones" node_paths=PackedStringArray("default_camera") instance=ExtResource("3_b2cq8")]
@@ -237,6 +233,9 @@ default_camera = NodePath("Camera2D")
 [node name="Zone04" parent="Zones" node_paths=PackedStringArray("default_camera") instance=ExtResource("3_b2cq8")]
 position = Vector2(320, -900)
 default_camera = NodePath("Camera2D")
+
+[node name="PlayerSpawn" type="Node2D" parent="." groups=["spawn_position"]]
+position = Vector2(534, 11)
 
 [editable path="Zones/Zone01"]
 [editable path="Zones/Zone02"]
