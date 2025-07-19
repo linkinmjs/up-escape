@@ -15,7 +15,6 @@ func _on_body_entered(body: Node2D) -> void:
 		zone_camera.enabled = true
 		zone_camera.make_current()
 
-
 func _on_body_exited(body: Node2D) -> void:
 	if not body.is_multiplayer_authority():
 		return

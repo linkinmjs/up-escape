@@ -187,7 +187,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dovo2"]
-size = Vector2(18, 34)
+size = Vector2(17.5, 33)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_75vfm"]
 properties/0/path = NodePath(".:position")
@@ -208,7 +208,7 @@ sprite_frames = SubResource("SpriteFrames_75vfm")
 animation = &"idle_ground"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, 2)
+position = Vector2(-0.75, 6.5)
 shape = SubResource("RectangleShape2D_dovo2")
 
 [node name="DebugLabel" type="Label" parent="."]
