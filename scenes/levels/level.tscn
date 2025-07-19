@@ -235,7 +235,7 @@ position = Vector2(320, -900)
 default_camera = NodePath("Camera2D")
 
 [node name="PlayerSpawn" type="Node2D" parent="." groups=["spawn_position"]]
-position = Vector2(534, 11)
+position = Vector2(212, 201)
 
 [editable path="Zones/Zone01"]
 [editable path="Zones/Zone02"]
