@@ -9,6 +9,15 @@ func _ready() -> void:
 		push_warning("ZoneCamera: asigná Zone Camera y Default Camera")
 
 func _on_body_entered(body: Node2D) -> void:
+	if not body.is_multiplayer_authority():
+		return
 	if body.is_in_group("players"):
 		zone_camera.enabled = true
 		zone_camera.make_current()
+
+
+func _on_body_exited(body: Node2D) -> void:
+	if not body.is_multiplayer_authority():
+		return
+	if body.is_in_group("players"):
+		zone_camera.enabled = false
