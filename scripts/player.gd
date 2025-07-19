@@ -46,7 +46,7 @@ func handle_input(delta: float) -> void:
 		debug_visible = not debug_visible
 		$DebugLabel.visible = debug_visible
 	
-	# --- Movimiento horizontal ---
+	# Movimiento horizontal
 	if input_left:
 		velocity.x -= ACCELERATION * delta
 	elif input_right:
@@ -57,7 +57,7 @@ func handle_input(delta: float) -> void:
 			velocity.x = max(velocity.x - DECELERATION * delta, 0)
 		elif velocity.x < 0:
 			velocity.x = min(velocity.x + DECELERATION * delta, 0)
-	
+	# Movimiento vertical
 	if input_jump:
 		velocity.y -= THRUST_ACCELERATION * delta
 	else:
@@ -70,18 +70,18 @@ func handle_input(delta: float) -> void:
 	
 func handle_state(delta: float) -> void:
 	# Determinar estado según si nos movemos lo suficiente
-	if velocity.length() > 1.0:
+	if velocity.length() > 10.0:
 		if state != PlayerState.FLYING:
 			state = PlayerState.FLYING
-			# aquí podrías reproducir animación o sonido de vuelo
-			if has_node("AnimationPlayer"):
-				$AnimationPlayer.play("flying")
+			# TODO: acá reproducir animación o sonido de vuelo
+			if has_node("AnimatedSprite2D"):
+				$AnimatedSprite2D.play("flying")
 	else:
 		if state != PlayerState.IDLE:
 			state = PlayerState.IDLE
 			# aquí animación o sonido de reposo
-			if has_node("AnimationPlayer"):
-				$AnimationPlayer.play("idle")
+			if has_node("AnimatedSprite2D"):
+				$AnimatedSprite2D.play("idle")
 
 func update_debug_info() -> void:
 	if not debug_visible:
