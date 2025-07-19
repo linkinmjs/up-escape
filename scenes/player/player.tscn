@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cafsjq1dgbqfx"]
+[gd_scene load_steps=30 format=3 uid="uid://cafsjq1dgbqfx"]
 
 [ext_resource type="Script" uid="uid://cbn1tlop6fmgm" path="res://scripts/player.gd" id="1_8afob"]
 [ext_resource type="Texture2D" uid="uid://v5yfmak5moi" path="res://assets/sprites/player/idle.png" id="2_dovo2"]
@@ -189,6 +189,17 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dovo2"]
 size = Vector2(18, 34)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_75vfm"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("AnimatedSprite2D:frame")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("AnimatedSprite2D:animation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
 [node name="Player" type="CharacterBody2D" groups=["players"]]
 script = ExtResource("1_8afob")
 
@@ -203,3 +214,6 @@ shape = SubResource("RectangleShape2D_dovo2")
 [node name="DebugLabel" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_75vfm")
