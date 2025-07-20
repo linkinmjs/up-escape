@@ -38,9 +38,9 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	handle_input(delta)
+	apply_physics(delta)
 	handle_state()
 	#handle_animation() #TODO
-	apply_physics(delta)
 	update_debug_info()
 	
 func handle_input(delta: float) -> void:
@@ -53,27 +53,6 @@ func handle_input(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_toggle_debug"):
 		debug_visible = not debug_visible
 		$DebugLabel.visible = debug_visible
-	
-	# Movimiento horizontal
-	if input_left:
-		velocity.x -= ACCELERATION * delta
-	elif input_right:
-		velocity.x += ACCELERATION * delta
-	else:
-		# desacelerar suavemente hacia 0
-		if velocity.x > 0:
-			velocity.x = max(velocity.x - DECELERATION * delta, 0)
-		elif velocity.x < 0:
-			velocity.x = min(velocity.x + DECELERATION * delta, 0)
-	# Movimiento vertical
-	if input_jump:
-		velocity.y -= THRUST_ACCELERATION * delta
-	else:
-		velocity.y += THRUST_ACCELERATION * delta
-	
-	# Clamp de velocidades
-	velocity.x = clamp(velocity.x, -MAX_SPEED_X, MAX_SPEED_X)
-	velocity.y = clamp(velocity.y, -MAX_SPEED_Y, MAX_SPEED_Y)
 
 func handle_state() -> void:
 	# Determinar estados
@@ -82,11 +61,13 @@ func handle_state() -> void:
 			if input_jump:
 				state = PlayerState.TAKEOFF
 				$AnimatedSprite2D.play("takeoff")
+				$TakeOffTimer.start()
 		PlayerState.TAKEOFF:
 		# tras un pequeño delay o al alcanzar cierta velocidad:
-			if velocity.y < 0:
-				state = PlayerState.IDLE
-				$AnimatedSprite2D.play("idle")
+			#if velocity.y < 0:
+				#state = PlayerState.IDLE
+				#$AnimatedSprite2D.play("idle")
+			pass
 		PlayerState.IDLE:
 			if input_left or input_right or input_jump:
 				state = PlayerState.FLYING
@@ -109,15 +90,46 @@ func handle_state() -> void:
 			pass
 
 func apply_physics(delta: float) -> void:
+	# Movimiento horizontal:
+	if input_left and not is_on_floor():
+		velocity.x = max(velocity.x - ACCELERATION * delta, -MAX_SPEED_X)
+	elif input_right and not is_on_floor():
+		velocity.x = min(velocity.x + ACCELERATION * delta,  MAX_SPEED_X)
+	else:
+		# desaceleración
+		if velocity.x > 0:
+			velocity.x = max(velocity.x - DECELERATION * delta, 0)
+		elif velocity.x < 0:
+			velocity.x = min(velocity.x + DECELERATION * delta, 0)
+	
+	# Movimiento vertical (según estado)
+	match state:
+		PlayerState.TAKEOFF:
+			# durante el “arranque” sólo cae con gravedad
+			velocity.y += GRAVITY * delta
+		PlayerState.FLYING:
+			if input_jump:
+				velocity.y -= THRUST_ACCELERATION * delta
+			else:
+				velocity.y += GRAVITY * delta
+		_:
+			# IDLE, IDLE_GROUND, HURT, DEATH
+			velocity.y += GRAVITY * delta
+	
+	# Clamp de velocidades
+	velocity.x = clamp(velocity.x, -MAX_SPEED_X, MAX_SPEED_X)
+	velocity.y = clamp(velocity.y, -MAX_SPEED_Y, MAX_SPEED_Y)
+
 	move_and_slide()
 
 func _apply_damage(damage: int) -> void:
 	print("Se recibió daño:" + str(damage))
+	$HealthUI.visible = true
 	health -= damage
 	$HealthUI/TextureProgressBar.value = health
 
 func _on_hurt_timer_timeout() -> void:
-	print("Timeout de HurtTimer")
+	$HealthUI.visible = false
 	# tras el timer volvemos a un estado aéreo o suelo según corresponda
 	if is_on_floor():
 		state = PlayerState.IDLE_GROUND
@@ -125,6 +137,11 @@ func _on_hurt_timer_timeout() -> void:
 	else:
 		state = PlayerState.IDLE
 		$AnimatedSprite2D.play("idle")
+
+func _on_take_off_timer_timeout() -> void:
+	print("timeout timer takeoff")
+	state = PlayerState.FLYING
+	$AnimatedSprite2D.play("flying")
 
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	print(area)

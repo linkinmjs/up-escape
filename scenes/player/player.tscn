@@ -221,6 +221,7 @@ replication_config = SubResource("SceneReplicationConfig_75vfm")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_75vfm")
 animation = &"idle_ground"
+frame_progress = 0.325216
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.75, 6.5)
@@ -238,6 +239,7 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="HealthUI" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -265,5 +267,10 @@ texture_progress = SubResource("GradientTexture2D_0owmy")
 [node name="HurtTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="TakeOffTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
 [connection signal="area_entered" from="CollisionShape2D/Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
+[connection signal="timeout" from="TakeOffTimer" to="." method="_on_take_off_timer_timeout"]
