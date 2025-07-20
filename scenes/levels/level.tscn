@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=4 uid="uid://du32gkmfjk1dy"]
+[gd_scene load_steps=6 format=4 uid="uid://du32gkmfjk1dy"]
 
 [ext_resource type="Texture2D" uid="uid://bu2wldkm76xpt" path="res://assets/tilesets/tileset01.png" id="1_bovvr"]
 [ext_resource type="PackedScene" uid="uid://fupdwtkenmfl" path="res://scenes/levels/zone_camera.tscn" id="3_b2cq8"]
+[ext_resource type="PackedScene" uid="uid://brh1f2kks4giq" path="res://scenes/traps/circular_saw.tscn" id="3_xb4v1"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b2cq8"]
 texture = ExtResource("1_bovvr")
@@ -322,6 +323,11 @@ default_camera = NodePath("Camera2D")
 
 [node name="PlayerSpawn" type="Node2D" parent="." groups=["spawn_position"]]
 position = Vector2(212, 201)
+
+[node name="Traps" type="Node2D" parent="."]
+
+[node name="CircularSaw" parent="Traps" instance=ExtResource("3_xb4v1")]
+position = Vector2(362, 291)
 
 [editable path="Zones/Zone01"]
 [editable path="Zones/Zone02"]

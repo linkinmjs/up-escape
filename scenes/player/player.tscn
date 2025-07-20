@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cafsjq1dgbqfx"]
+[gd_scene load_steps=33 format=3 uid="uid://cafsjq1dgbqfx"]
 
 [ext_resource type="Script" uid="uid://cbn1tlop6fmgm" path="res://scripts/player.gd" id="1_8afob"]
 [ext_resource type="Texture2D" uid="uid://v5yfmak5moi" path="res://assets/sprites/player/idle.png" id="2_dovo2"]
@@ -6,6 +6,17 @@
 [ext_resource type="Texture2D" uid="uid://d3sk57eamlx77" path="res://assets/sprites/player/death.png" id="2_lvxji"]
 [ext_resource type="Texture2D" uid="uid://bwfuijqi8iwvj" path="res://assets/sprites/player/hurt.png" id="4_75vfm"]
 [ext_resource type="Texture2D" uid="uid://b7d4hhx0a6u6m" path="res://assets/sprites/player/takeoff.png" id="6_0owmy"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_75vfm"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("AnimatedSprite2D:frame")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("AnimatedSprite2D:animation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h17s1"]
 atlas = ExtResource("2_lvxji")
@@ -189,19 +200,23 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dovo2"]
 size = Vector2(17.5, 33)
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_75vfm"]
-properties/0/path = NodePath(".:position")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath("AnimatedSprite2D:frame")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath("AnimatedSprite2D:animation")
-properties/2/spawn = true
-properties/2/replication_mode = 1
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_75vfm"]
+size = Vector2(18, 33)
+
+[sub_resource type="Gradient" id="Gradient_75vfm"]
+offsets = PackedFloat32Array(0.451429, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.617743, 0.0759341, 0.163303, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0owmy"]
+gradient = SubResource("Gradient_75vfm")
+fill_from = Vector2(0.5, 1)
+fill_to = Vector2(0.5, 0.9)
 
 [node name="Player" type="CharacterBody2D" groups=["players"]]
 script = ExtResource("1_8afob")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_75vfm")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_75vfm")
@@ -211,9 +226,44 @@ animation = &"idle_ground"
 position = Vector2(-0.75, 6.5)
 shape = SubResource("RectangleShape2D_dovo2")
 
+[node name="Area2D" type="Area2D" parent="CollisionShape2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D/Area2D"]
+position = Vector2(-0.25, 0)
+shape = SubResource("RectangleShape2D_75vfm")
+debug_color = Color(0.878431, 0.301961, 0.411765, 0.219608)
+
 [node name="DebugLabel" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_75vfm")
+[node name="HealthUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -17.0
+offset_right = 12.0
+offset_bottom = -17.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.01787, 0.129605)
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="HealthUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.623469, 0.597286)
+step = 0.1
+value = 100.0
+texture_progress = SubResource("GradientTexture2D_0owmy")
+
+[node name="HurtTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="area_entered" from="CollisionShape2D/Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]

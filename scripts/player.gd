@@ -26,6 +26,9 @@ var input_left := false
 var input_right := false
 var input_jump := false
 
+# Flags del player
+var health := 100
+
 func _enter_tree() -> void:
 	# En caso de multiplayer, mantenemos autoridad
 	set_multiplayer_authority(name.to_int())
@@ -79,15 +82,11 @@ func handle_state() -> void:
 			if input_jump:
 				state = PlayerState.TAKEOFF
 				$AnimatedSprite2D.play("takeoff")
-			#elif received_damage:
-				#state = PlayerState.HURT
-
 		PlayerState.TAKEOFF:
 		# tras un pequeño delay o al alcanzar cierta velocidad:
 			if velocity.y < 0:
 				state = PlayerState.IDLE
 				$AnimatedSprite2D.play("idle")
-		
 		PlayerState.IDLE:
 			if input_left or input_right or input_jump:
 				state = PlayerState.FLYING
@@ -95,9 +94,6 @@ func handle_state() -> void:
 			elif is_on_floor():
 				state = PlayerState.IDLE_GROUND
 				$AnimatedSprite2D.play("idle_ground")
-			#elif received_damage:
-				#state = PlayerState.HURT
-		
 		PlayerState.FLYING:
 			if not(input_left or input_right or input_jump):
 				state = PlayerState.IDLE
@@ -105,24 +101,38 @@ func handle_state() -> void:
 			elif is_on_floor():
 				state = PlayerState.IDLE_GROUND
 				$AnimatedSprite2D.play("idle_ground")
-			#elif received_damage:
-				#state = PlayerState.HURT
-				
 		PlayerState.HURT:
-			#if health <= 0:
-				#state = PlayerState.DEATH
-			#elif hurt_timer.time_left == 0:
-				# vuelve al último estado válido, p.ej. air o suelo
-				# state = is_on_floor() ? PlayerState.IDLE_GROUND : PlayerState.IDLE
+			if health <= 0:
+				state = PlayerState.DEATH
 			pass
-		
 		PlayerState.DEATH:
-			# sin salidas
 			pass
 
-# WIP
 func apply_physics(delta: float) -> void:
 	move_and_slide()
+
+func _apply_damage(damage: int) -> void:
+	print("Se recibió daño:" + str(damage))
+	health -= damage
+	$HealthUI/TextureProgressBar.value = health
+
+func _on_hurt_timer_timeout() -> void:
+	print("Timeout de HurtTimer")
+	# tras el timer volvemos a un estado aéreo o suelo según corresponda
+	if is_on_floor():
+		state = PlayerState.IDLE_GROUND
+		$AnimatedSprite2D.play("idle_ground")
+	else:
+		state = PlayerState.IDLE
+		$AnimatedSprite2D.play("idle")
+
+func _on_area_2d_area_entered(area: Area2D) -> void:
+	print(area)
+	if area.is_in_group("trap") and state != PlayerState.HURT:
+		_apply_damage(10)
+		state = PlayerState.HURT
+		$AnimatedSprite2D.play("hurt")
+		$HurtTimer.start()
 
 func update_debug_info() -> void:
 	if not debug_visible:
