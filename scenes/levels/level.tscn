@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://du32gkmfjk1dy"]
+[gd_scene load_steps=20 format=4 uid="uid://du32gkmfjk1dy"]
 
 [ext_resource type="Texture2D" uid="uid://bu2wldkm76xpt" path="res://assets/tilesets/tileset01.png" id="1_bovvr"]
 [ext_resource type="PackedScene" uid="uid://fupdwtkenmfl" path="res://scenes/levels/zone_camera.tscn" id="3_b2cq8"]
@@ -15,6 +15,8 @@
 [ext_resource type="Texture2D" uid="uid://cnuej568h5ovg" path="res://assets/sprites/objects/Pointers/7.png" id="10_qogh7"]
 [ext_resource type="Texture2D" uid="uid://bg7igmnw3pank" path="res://assets/sprites/objects/Boxes/3.png" id="13_b8j7q"]
 [ext_resource type="Texture2D" uid="uid://2ora7d1c0vwp" path="res://assets/sprites/objects/Boxes/6.png" id="14_qhnmj"]
+[ext_resource type="Texture2D" uid="uid://dww3nljhqqr2n" path="res://assets/sprites/cyberpunk-farm/Crops/1.png" id="15_b8j7q"]
+[ext_resource type="Texture2D" uid="uid://chqonescnngyn" path="res://assets/sprites/cyberpunk-farm/Decor/1.png" id="16_qhnmj"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b2cq8"]
 texture = ExtResource("1_bovvr")
@@ -386,6 +388,14 @@ texture = ExtResource("13_b8j7q")
 [node name="6" type="Sprite2D" parent="Enviroment/Objects"]
 position = Vector2(65, 340)
 texture = ExtResource("14_qhnmj")
+
+[node name="2" type="Sprite2D" parent="Enviroment/Objects"]
+position = Vector2(189, -423)
+texture = ExtResource("15_b8j7q")
+
+[node name="1" type="Sprite2D" parent="Enviroment/Objects"]
+position = Vector2(284, -437)
+texture = ExtResource("16_qhnmj")
 
 [node name="PlayerSpawn" type="Node2D" parent="." groups=["spawn_position"]]
 position = Vector2(176, 308)
