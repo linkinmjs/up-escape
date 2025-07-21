@@ -213,6 +213,7 @@ fill_from = Vector2(0.5, 1)
 fill_to = Vector2(0.5, 0.9)
 
 [node name="Player" type="CharacterBody2D" groups=["players"]]
+z_index = 1
 script = ExtResource("1_8afob")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -221,7 +222,7 @@ replication_config = SubResource("SceneReplicationConfig_75vfm")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_75vfm")
 animation = &"idle_ground"
-frame_progress = 0.92543
+frame_progress = 0.639384
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.75, 6.5)
