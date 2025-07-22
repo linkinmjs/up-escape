@@ -40,6 +40,7 @@ func _physics_process(delta: float) -> void:
 	handle_input(delta)
 	apply_physics(delta)
 	handle_state()
+	handle_sound()
 	#handle_animation() #TODO
 	update_debug_info()
 	
@@ -62,6 +63,7 @@ func handle_state() -> void:
 				state = PlayerState.TAKEOFF
 				$AnimatedSprite2D.play("takeoff")
 				$TakeOffTimer.start()
+
 		PlayerState.TAKEOFF:
 		# tras un pequeño delay o al alcanzar cierta velocidad:
 			#if velocity.y < 0:
@@ -71,7 +73,6 @@ func handle_state() -> void:
 		PlayerState.IDLE:
 			if input_left or input_right or input_jump:
 				state = PlayerState.FLYING
-				$AnimatedSprite2D.play("flying")
 			elif is_on_floor():
 				state = PlayerState.IDLE_GROUND
 				$AnimatedSprite2D.play("idle_ground")
@@ -122,6 +123,23 @@ func apply_physics(delta: float) -> void:
 
 	move_and_slide()
 
+func handle_sound() -> void:
+	match state:
+		PlayerState.IDLE_GROUND:
+			_play_sound(1, 3)
+			_stop_sound()
+		PlayerState.IDLE:
+			_play_sound(0.24, 2)
+		PlayerState.FLYING:
+			_play_sound(0.25, 2)
+		PlayerState.TAKEOFF:
+			_play_sound(0.15, 2)
+		PlayerState.HURT:
+			pass
+		PlayerState.DEATH:
+			pass
+
+
 func _apply_damage(damage: int) -> void:
 	print("Se recibió daño:" + str(damage))
 	$HealthUI.visible = true
@@ -150,6 +168,26 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 		state = PlayerState.HURT
 		$AnimatedSprite2D.play("hurt")
 		$HurtTimer.start()
+
+func _play_sound(pitch: float, type: int):
+	#1: TakeOff
+	#2: Flying
+	#3: TurnOff
+	match type:
+		1: 
+			$Sounds/TakeOff.pitch_scale = pitch
+			$Sounds/TakeOff.play()
+	match type:
+		2: 
+			$Sounds/Flying.pitch_scale = pitch
+			$Sounds/Flying.play()
+	match type:
+		3: 
+			$Sounds/TurnOff.pitch_scale = pitch
+			$Sounds/TurnOff.play()
+	
+func _stop_sound():
+	$Sounds/Flying.stop()
 
 func update_debug_info() -> void:
 	if not debug_visible:
