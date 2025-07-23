@@ -44,7 +44,7 @@ func _physics_process(delta: float) -> void:
 	#handle_animation() #TODO
 	update_debug_info()
 	
-func handle_input(delta: float) -> void:
+func handle_input(_delta: float) -> void:
 	# Leer inputs
 	input_left  = Input.is_action_pressed("ui_left")
 	input_right = Input.is_action_pressed("ui_right")
@@ -71,13 +71,13 @@ func handle_state() -> void:
 				#$AnimatedSprite2D.play("idle")
 			pass
 		PlayerState.IDLE:
-			if input_left or input_right or input_jump:
+			if input_jump:
 				state = PlayerState.FLYING
 			elif is_on_floor():
 				state = PlayerState.IDLE_GROUND
 				$AnimatedSprite2D.play("idle_ground")
 		PlayerState.FLYING:
-			if not(input_left or input_right or input_jump):
+			if not input_jump:
 				state = PlayerState.IDLE
 				$AnimatedSprite2D.play("idle")
 			elif is_on_floor():
@@ -193,6 +193,7 @@ func _play_sound(pitch: float, type: int):
 	
 func _stop_sound():
 	$Sounds/Flying.stop()
+	$Sounds/Hurt.stop()
 
 func update_debug_info() -> void:
 	if not debug_visible:
