@@ -135,7 +135,7 @@ func handle_sound() -> void:
 		PlayerState.TAKEOFF:
 			_play_sound(0.15, 2)
 		PlayerState.HURT:
-			pass
+			_play_sound(0.15, 4)
 		PlayerState.DEATH:
 			pass
 
@@ -173,6 +173,7 @@ func _play_sound(pitch: float, type: int):
 	#1: TakeOff
 	#2: Flying
 	#3: TurnOff
+	#4: Hurt
 	match type:
 		1: 
 			$Sounds/TakeOff.pitch_scale = pitch
@@ -185,6 +186,10 @@ func _play_sound(pitch: float, type: int):
 		3: 
 			$Sounds/TurnOff.pitch_scale = pitch
 			$Sounds/TurnOff.play()
+	match type:
+		4:
+			$Sounds/Hurt.pitch_scale = pitch
+			$Sounds/Hurt.play()
 	
 func _stop_sound():
 	$Sounds/Flying.stop()
