@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://c8gkf4adn1p00"]
+[gd_scene load_steps=11 format=3 uid="uid://c8gkf4adn1p00"]
 
 [ext_resource type="Texture2D" uid="uid://cgenfqsykvqcw" path="res://assets/sprites/objects/Door.png" id="1_bu3y2"]
+[ext_resource type="Script" uid="uid://b2rahtkknhxsm" path="res://scripts/door.gd" id="1_odsy8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_odsy8"]
 atlas = ExtResource("1_bu3y2")
@@ -64,14 +65,15 @@ animations = [{
 size = Vector2(12, 80)
 
 [node name="Door" type="Node2D"]
+script = ExtResource("1_odsy8")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_366ik")
 animation = &"closed"
 frame_progress = 0.678553
 
-[node name="Area2D" type="Area2D" parent="AnimatedSprite2D"]
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite2D/Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(-16, 8)
 shape = SubResource("RectangleShape2D_sdkf1")

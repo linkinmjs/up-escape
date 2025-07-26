@@ -27,7 +27,7 @@ var input_right := false
 var input_jump := false
 
 # Flags del player
-var health := 5
+var health := 100
 
 func _enter_tree() -> void:
 	# En caso de multiplayer, mantenemos autoridad
