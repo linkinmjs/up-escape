@@ -55,3 +55,4 @@ ui_toggle_debug={
 
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"
+environment/defaults/default_clear_color=Color(0.28289, 0.20492, 0.328669, 1)

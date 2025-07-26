@@ -27,7 +27,7 @@ var input_right := false
 var input_jump := false
 
 # Flags del player
-var health := 100
+var health := 5
 
 func _enter_tree() -> void:
 	# En caso de multiplayer, mantenemos autoridad
@@ -63,7 +63,6 @@ func handle_state() -> void:
 				state = PlayerState.TAKEOFF
 				$AnimatedSprite2D.play("takeoff")
 				$TakeOffTimer.start()
-
 		PlayerState.TAKEOFF:
 		# tras un pequeño delay o al alcanzar cierta velocidad:
 			#if velocity.y < 0:
@@ -120,7 +119,7 @@ func apply_physics(delta: float) -> void:
 	# Clamp de velocidades
 	velocity.x = clamp(velocity.x, -MAX_SPEED_X, MAX_SPEED_X)
 	velocity.y = clamp(velocity.y, -MAX_SPEED_Y, MAX_SPEED_Y)
-
+	
 	move_and_slide()
 
 func handle_sound() -> void:
