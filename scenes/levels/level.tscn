@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=4 uid="uid://du32gkmfjk1dy"]
+[gd_scene load_steps=31 format=4 uid="uid://du32gkmfjk1dy"]
 
 [ext_resource type="Texture2D" uid="uid://bu2wldkm76xpt" path="res://assets/tilesets/tileset01.png" id="1_bovvr"]
 [ext_resource type="PackedScene" uid="uid://fupdwtkenmfl" path="res://scenes/levels/zone_camera.tscn" id="3_b2cq8"]
@@ -11,16 +11,17 @@
 [ext_resource type="Texture2D" uid="uid://blychpe5bu2a1" path="res://assets/sprites/trees/11.png" id="7_7pb6i"]
 [ext_resource type="Texture2D" uid="uid://c3uv8aq52gq3n" path="res://assets/sprites/trees/17.png" id="8_7pb6i"]
 [ext_resource type="Texture2D" uid="uid://c02ayc371pshw" path="res://assets/sprites/trees/12.png" id="8_jyre1"]
-[ext_resource type="Texture2D" uid="uid://dx3pjhslvr5s" path="res://assets/sprites/objects/Ridges/1.png" id="9_mq31s"]
-[ext_resource type="Texture2D" uid="uid://c68a701xvhyam" path="res://assets/sprites/objects/Pointers/4.png" id="9_xfk5q"]
-[ext_resource type="Texture2D" uid="uid://cvng7hi0sw22q" path="res://assets/sprites/objects/Ridges/2.png" id="10_5mi6g"]
-[ext_resource type="Texture2D" uid="uid://cnuej568h5ovg" path="res://assets/sprites/objects/Pointers/7.png" id="10_qogh7"]
+[ext_resource type="Texture2D" uid="uid://dx3pjhslvr5s" path="res://assets/sprites/icons/objects/Ridges/1.png" id="9_mq31s"]
+[ext_resource type="Texture2D" uid="uid://c68a701xvhyam" path="res://assets/sprites/icons/objects/Pointers/4.png" id="9_xfk5q"]
+[ext_resource type="Texture2D" uid="uid://cvng7hi0sw22q" path="res://assets/sprites/icons/objects/Ridges/2.png" id="10_5mi6g"]
+[ext_resource type="Texture2D" uid="uid://cnuej568h5ovg" path="res://assets/sprites/icons/objects/Pointers/7.png" id="10_qogh7"]
 [ext_resource type="Texture2D" uid="uid://bxk8clihqraia" path="res://assets/sprites/green_zone/Other/Tree4.png" id="11_qhnmj"]
-[ext_resource type="Texture2D" uid="uid://bg7igmnw3pank" path="res://assets/sprites/objects/Boxes/3.png" id="13_b8j7q"]
-[ext_resource type="Texture2D" uid="uid://2ora7d1c0vwp" path="res://assets/sprites/objects/Boxes/6.png" id="14_qhnmj"]
+[ext_resource type="Texture2D" uid="uid://bg7igmnw3pank" path="res://assets/sprites/icons/objects/Boxes/3.png" id="13_b8j7q"]
+[ext_resource type="Texture2D" uid="uid://2ora7d1c0vwp" path="res://assets/sprites/icons/objects/Boxes/6.png" id="14_qhnmj"]
 [ext_resource type="Texture2D" uid="uid://dww3nljhqqr2n" path="res://assets/sprites/cyberpunk-farm/Crops/1.png" id="15_b8j7q"]
 [ext_resource type="Texture2D" uid="uid://chqonescnngyn" path="res://assets/sprites/cyberpunk-farm/Decor/1.png" id="16_qhnmj"]
 [ext_resource type="PackedScene" uid="uid://c8gkf4adn1p00" path="res://scenes/door/door.tscn" id="20_4ab0e"]
+[ext_resource type="PackedScene" uid="uid://dn43ih4rxpxhf" path="res://scenes/items/key.tscn" id="21_p62il"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b2cq8"]
 texture = ExtResource("1_bovvr")
@@ -548,6 +549,7 @@ texture = ExtResource("16_qhnmj")
 [node name="Door" parent="Enviroment/Doors" instance=ExtResource("20_4ab0e")]
 position = Vector2(508, -1702)
 scale = Vector2(0.811065, 0.811065)
+door_number = 1
 
 [node name="Lights" type="Node2D" parent="Enviroment"]
 
@@ -567,8 +569,14 @@ occluder = SubResource("OccluderPolygon2D_4ab0e")
 [node name="LightOccluder2D2" type="LightOccluder2D" parent="Enviroment/Lights"]
 occluder = SubResource("OccluderPolygon2D_p62il")
 
+[node name="Keys" type="Node2D" parent="Enviroment"]
+
+[node name="Key" parent="Enviroment/Keys" instance=ExtResource("21_p62il")]
+position = Vector2(67, -1663)
+key_number = 1
+
 [node name="PlayerSpawn" type="Node2D" parent="." groups=["spawn_position"]]
-position = Vector2(224, -1863)
+position = Vector2(142, -1692)
 
 [node name="Traps" type="Node2D" parent="."]
 

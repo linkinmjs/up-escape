@@ -1,6 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://c8gkf4adn1p00"]
+[gd_scene load_steps=12 format=3 uid="uid://c8gkf4adn1p00"]
 
-[ext_resource type="Texture2D" uid="uid://cgenfqsykvqcw" path="res://assets/sprites/objects/Door.png" id="1_bu3y2"]
+[ext_resource type="Texture2D" uid="uid://cgenfqsykvqcw" path="res://assets/sprites/icons/objects/Door.png" id="1_bu3y2"]
 [ext_resource type="Script" uid="uid://b2rahtkknhxsm" path="res://scripts/door.gd" id="1_odsy8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_odsy8"]
@@ -33,7 +33,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_odsy8")
 }],
-"loop": true,
+"loop": false,
 "name": &"closed",
 "speed": 5.0
 }, {
@@ -61,6 +61,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_odsy8"]
+size = Vector2(20, 80)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sdkf1"]
 size = Vector2(12, 80)
 
@@ -69,11 +72,19 @@ script = ExtResource("1_odsy8")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_366ik")
-animation = &"closed"
-frame_progress = 0.678553
+animation = &"open"
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-16, 8)
+shape = SubResource("RectangleShape2D_odsy8")
+debug_color = Color(1.13107e-06, 0.508841, 0.334534, 0.419608)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(-16, 8)
 shape = SubResource("RectangleShape2D_sdkf1")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
