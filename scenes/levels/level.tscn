@@ -1,6 +1,7 @@
-[gd_scene load_steps=31 format=4 uid="uid://du32gkmfjk1dy"]
+[gd_scene load_steps=33 format=4 uid="uid://du32gkmfjk1dy"]
 
 [ext_resource type="Texture2D" uid="uid://bu2wldkm76xpt" path="res://assets/tilesets/tileset01.png" id="1_bovvr"]
+[ext_resource type="Script" uid="uid://bttrawdhvu8dq" path="res://scripts/level.gd" id="1_c8ctg"]
 [ext_resource type="PackedScene" uid="uid://fupdwtkenmfl" path="res://scenes/levels/zone_camera.tscn" id="3_b2cq8"]
 [ext_resource type="Texture2D" uid="uid://bl0qw4ikh8frj" path="res://assets/sprites/pipes/PipeSet4.png" id="3_lp2ca"]
 [ext_resource type="PackedScene" uid="uid://brh1f2kks4giq" path="res://scenes/traps/circular_saw.tscn" id="3_xb4v1"]
@@ -22,6 +23,7 @@
 [ext_resource type="Texture2D" uid="uid://chqonescnngyn" path="res://assets/sprites/cyberpunk-farm/Decor/1.png" id="16_qhnmj"]
 [ext_resource type="PackedScene" uid="uid://c8gkf4adn1p00" path="res://scenes/door/door.tscn" id="20_4ab0e"]
 [ext_resource type="PackedScene" uid="uid://dn43ih4rxpxhf" path="res://scenes/items/key.tscn" id="21_p62il"]
+[ext_resource type="AudioStream" uid="uid://cthhp83ene4on" path="res://assets/sounds/El Robot Bajo el Agua - Destrabando la Palanca - Album.mp3" id="23_c3o0d"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b2cq8"]
 texture = ExtResource("1_bovvr")
@@ -413,6 +415,7 @@ polygon = PackedVector2Array(-32, -2176, 543, -2175, 543, -2145, 31, -2143, 33, 
 polygon = PackedVector2Array(608, -2160, 608, -1663, 97, -1663, 97, -1600, 671, -1601, 672, -2163)
 
 [node name="Level" type="Node2D"]
+script = ExtResource("1_c8ctg")
 
 [node name="DefaultCamera" type="Camera2D" parent="."]
 position = Vector2(320, 603)
@@ -616,6 +619,12 @@ position = Vector2(286, -1395)
 
 [node name="CircularSaw7" parent="Traps" instance=ExtResource("3_xb4v1")]
 position = Vector2(238, -1395)
+
+[node name="Sounds" type="Node2D" parent="."]
+
+[node name="Background" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource("23_c3o0d")
+volume_db = -18.0
 
 [editable path="Zones/ZoneMainMenu"]
 [editable path="Zones/Zone01"]
