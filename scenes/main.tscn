@@ -12,10 +12,15 @@ spawn_path = NodePath("../Level/PlayerSpawn")
 
 [node name="Level" parent="." instance=ExtResource("1_o5qli")]
 
+[node name="Zone01" parent="Level/Zones" index="1" node_paths=PackedStringArray("default_camera")]
+default_camera = NodePath("Camera2D")
+
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 409.0
+offset_bottom = 409.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -34,6 +39,7 @@ text = "Unirse a partida"
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]
 
 [editable path="Level"]
+[editable path="Level/Zones/ZoneMainMenu"]
 [editable path="Level/Zones/Zone01"]
 [editable path="Level/Zones/Zone02"]
 [editable path="Level/Zones/Zone03"]
