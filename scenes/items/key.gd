@@ -2,7 +2,7 @@ extends Node2D
 
 @export var key_number : int
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 

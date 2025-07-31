@@ -12,9 +12,6 @@ spawn_path = NodePath("../Level/PlayerSpawn")
 
 [node name="Level" parent="." instance=ExtResource("1_o5qli")]
 
-[node name="Zone01" parent="Level/Zones" index="1" node_paths=PackedStringArray("default_camera")]
-default_camera = NodePath("Camera2D")
-
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
