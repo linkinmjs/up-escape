@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var door_number: int
+@export var door_number: int 
 var status = "closed"
 
 func _ready() -> void:

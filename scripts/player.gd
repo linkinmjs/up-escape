@@ -11,7 +11,7 @@ enum PlayerState {
 
 # Estado actual
 var state: PlayerState = PlayerState.IDLE
-var debug_visible := true
+var debug_visible := false
 
 # Parámetros de movimiento
 const ACCELERATION := 400.0           # aceleración horizontal

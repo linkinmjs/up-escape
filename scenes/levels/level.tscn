@@ -625,7 +625,7 @@ theme_override_font_sizes/font_size = 50
 text = "FIN :)"
 
 [node name="PlayerSpawn" type="Node2D" parent="." groups=["spawn_position"]]
-position = Vector2(508, -2214)
+position = Vector2(135, 275)
 
 [node name="Traps" type="Node2D" parent="."]
 
